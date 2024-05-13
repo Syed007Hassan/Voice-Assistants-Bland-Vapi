@@ -18,26 +18,6 @@ bland_api_key = os.getenv('BLAND_API_KEY')
 client = openai.Client(api_key=api_key)
 
 
-# def execute_python_code(s: str) -> str:
-#     with NamedTemporaryFile(suffix='.py', delete=False) as temp_file:
-#         temp_file_name = temp_file.name
-#         temp_file.write(s.encode('utf-8'))
-#         temp_file.flush()
-#     try:
-#         result = subprocess.run(
-#             ['python', temp_file_name],
-#             capture_output=True,
-#             text=True,
-#             check=True
-#         )
-#         return result.stdout
-#     except subprocess.CalledProcessError as e:
-#         return e.stderr
-#     finally:
-#         import os
-#         os.remove(temp_file_name)
-
-
 def make_simple_call(phone_number: str, task: str) -> dict:
     url = "https://api.bland.ai/v1/calls"
     headers = {
