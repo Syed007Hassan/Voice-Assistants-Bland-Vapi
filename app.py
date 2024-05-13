@@ -118,9 +118,3 @@ if __name__ == "__main__":
     message_dict = json.loads(messages.model_dump_json())
     print(message_dict['data'][0]['content'][0]["text"]["value"])
     
-    # call_response = make_simple_call(
-    #     phone_number="+923353215848",
-    #     task="Hello, I'm calling on behalf of John Doe, to schedule a trip to the airport."
-    # )
-    
-    # print(call_response)
