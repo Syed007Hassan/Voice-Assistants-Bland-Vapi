@@ -1,7 +1,7 @@
 SEND_SIMPLE_CALL = {
     "type": "function",
     "function": {
-        "name": "send_simple_call",
+        "name": "forward_simple_call",
         "description": "Send an AI phone call with a custom objective and actions.",
         "parameters": {
             "type": "object",

@@ -14,40 +14,41 @@ load_dotenv()
 
 
 api_key = os.getenv('OPENAI_API_KEY')
+bland_api_key = os.getenv('BLAND_API_KEY')
 client = openai.Client(api_key=api_key)
 
 
-def execute_python_code(s: str) -> str:
-    with NamedTemporaryFile(suffix='.py', delete=False) as temp_file:
-        temp_file_name = temp_file.name
-        temp_file.write(s.encode('utf-8'))
-        temp_file.flush()
-    try:
-        result = subprocess.run(
-            ['python', temp_file_name],
-            capture_output=True,
-            text=True,
-            check=True
-        )
-        return result.stdout
-    except subprocess.CalledProcessError as e:
-        return e.stderr
-    finally:
-        import os
-        os.remove(temp_file_name)
+# def execute_python_code(s: str) -> str:
+#     with NamedTemporaryFile(suffix='.py', delete=False) as temp_file:
+#         temp_file_name = temp_file.name
+#         temp_file.write(s.encode('utf-8'))
+#         temp_file.flush()
+#     try:
+#         result = subprocess.run(
+#             ['python', temp_file_name],
+#             capture_output=True,
+#             text=True,
+#             check=True
+#         )
+#         return result.stdout
+#     except subprocess.CalledProcessError as e:
+#         return e.stderr
+#     finally:
+#         import os
+#         os.remove(temp_file_name)
 
 
 def make_simple_call(phone_number: str, task: str) -> dict:
     url = "https://api.bland.ai/v1/calls"
     headers = {
         'Content-Type': 'application/json',
-        'Authorization': 'sk-vepvnqju3xd7tk9rs70j8e4dkxq0d2xr4lsdareaknnmwljqyom81wvm2d22qps769'
+        'Authorization': bland_api_key
     }
-    data = {
+    payload = {
         "phone_number": phone_number,
         "task": task
     }
-    response = requests.post(url, headers=headers, data=json.dumps(data))
+    response = requests.request("POST", url, json=payload, headers=headers)
     return response.json()
 
 
@@ -101,7 +102,7 @@ def run_assistant(client, assistant_id, thread_id):
         if run.status == "requires_action":
             tool_call = run.required_action.submit_tool_outputs.tool_calls[0]
             tool_outputs = []
-            if tool_call.function.name == "send_simple_call":
+            if tool_call.function.name == "forward_simple_call":
                 generated_phone_number = json.loads(
                     tool_call.function.arguments)["phone_number"]
                 generated_task = json.loads(
@@ -113,7 +114,7 @@ def run_assistant(client, assistant_id, thread_id):
                 tool_outputs.append(
                     {
                         "tool_call_id": tool_call.id,
-                        "output": result,
+                        "output": str(result),
                     },
                 )
 
@@ -126,7 +127,6 @@ def run_assistant(client, assistant_id, thread_id):
 
 
 if __name__ == "__main__":
-
     assistant_id, thread_id = setup_assistant(client)
     print(
         f"Debugging: Useful for checking the generated agent in the playground. https://platform.openai.com/playground?mode=assistant&assistant={assistant_id}")
@@ -137,3 +137,10 @@ if __name__ == "__main__":
 
     message_dict = json.loads(messages.model_dump_json())
     print(message_dict['data'][0]['content'][0]["text"]["value"])
+    
+    # call_response = make_simple_call(
+    #     phone_number="+923353215848",
+    #     task="Hello, I'm calling on behalf of John Doe, to schedule a trip to the airport."
+    # )
+    
+    # print(call_response)
