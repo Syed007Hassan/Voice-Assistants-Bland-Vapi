@@ -9,9 +9,9 @@ Always ensure clarity in communication and maintain a professional demeanor thro
 """
 
 INITIAL_USER_PROMPT = """
-Hello, My name is Hassan, schedule a trip for me from Lahore
+Hello, My name is Faisal, schedule a trip for me from Lahore
 to Islamabad on 15th August 2022.
-My phone number is +923353215848.
+My phone number is +1 857 693 1414.
 """
 
 # INSTRUCTIONS = """

@@ -19,3 +19,22 @@ SEND_SIMPLE_CALL = {
         }
     }
 }
+
+
+MAKE_SIMPLE_CALL = {
+    "type": "function",
+    "function": {
+        "name": "forward_simple_call",
+        "description": "Make a simple phone call with a custom objective and actions.",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "phone_number": {
+                    "type": "string",
+                    "description": "The phone number to call. Country code defaults to +1 (US) if not specified. Use E.164 format for predictable results.",
+                },
+            },
+            "required": ["phone_number"]
+        }
+    }
+}
